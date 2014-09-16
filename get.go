@@ -19,7 +19,6 @@ func Get(url string) (*http.Response, error) {
 		}
 
 		response, err := client.Get(url)
-		response.Body.Close()
 
 		channel <- Response{response, err}
 	}()
