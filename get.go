@@ -10,20 +10,23 @@ type Response struct {
 	err  error
 }
 
-func Get(url string) (*http.Response, error) {
-	channel := make(chan Response, 1)
+func Get(urls ...string) <-chan *Response {
+	channel := make(chan *Response, len(urls))
+	client := &http.Client{
+		Timeout: 60 * time.Second,
+	}
 
-	go func() {
-		client := &http.Client{
-			Timeout: 60 * time.Second,
-		}
+	for _, url := range urls {
+		go func(url string) {
+			response, err := client.Get(url)
 
-		response, err := client.Get(url)
+			if err != nil {
+				defer response.Body.Close()
+			}
 
-		channel <- Response{response, err}
-	}()
+			channel <- &Response{response, err}
+		}(url)
+	}
 
-	response := <-channel
-
-	return response.http, response.err
+	return channel
 }
