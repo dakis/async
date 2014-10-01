@@ -6,8 +6,8 @@ import (
 )
 
 type Response struct {
-	http *http.Response
-	err  error
+	Http *http.Response
+	Err  error
 }
 
 func Get(urls ...string) <-chan *Response {
