@@ -20,7 +20,7 @@ func Get(urls ...string) <-chan *Response {
 		go func(url string) {
 			response, err := client.Get(url)
 
-			if err != nil {
+			if err == nil {
 				defer response.Body.Close()
 			}
 
