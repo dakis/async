@@ -20,10 +20,6 @@ func Get(urls ...string) <-chan *Response {
 		go func(url string) {
 			response, err := client.Get(url)
 
-			if err == nil {
-				defer response.Body.Close()
-			}
-
 			channel <- &Response{response, err}
 		}(url)
 	}
